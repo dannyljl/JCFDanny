@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -64,7 +65,7 @@ public class WoordenController implements Initializable {
 
     private ArrayList<String> allwords = new ArrayList<String>();
 
-    private HashMap<String, Integer> hmap = new HashMap<String, Integer>();
+    private Map<String, Integer> hmap = new HashMap<String, Integer>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -104,6 +105,7 @@ public class WoordenController implements Initializable {
     @FXML
     private void frequentieAction(ActionEvent event) {
         fillallWords();
+        Map<Integer,List<String>> newMap = new HashMap<Integer,List<String>>();
         for(String word : allwords){
             if(hmap.containsKey(word)){
                 hmap.put(word, hmap.get(word) + 1);
@@ -113,9 +115,15 @@ public class WoordenController implements Initializable {
             }
         }
         
-        hmap.entrySet().stream()
-        .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-        .forEach(x -> taOutput.appendText(x.getKey() + "=  " + x.getValue() + "\n" ));
+        for(Map.Entry<String,Integer> entry : hmap.entrySet()){
+            newMap.computeIfAbsent(entry.getValue(), k -> new ArrayList<>()).add(entry.getKey());
+        }
+        
+        Map<Integer,List<String>> sorted = new TreeMap<Integer,List<String>>(newMap);
+        
+        for(Map.Entry<Integer,List<String>> entry : sorted.entrySet()){
+         taOutput.appendText(entry.getKey() + "= " + entry.getValue() + "\n");   
+        }
         
     }
 
