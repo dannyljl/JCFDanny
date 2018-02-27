@@ -93,13 +93,7 @@ public class WoordenController implements Initializable {
 
     @FXML
     private void sorteerAction(ActionEvent event) {
-        String[] splitted = DEFAULT_TEXT.split(" |\n|,", 0);
-        allwords = new ArrayList<String>();
-        for (String word : splitted) {
-            if (!word.equals("")) {
-                allwords.add(word);
-            }
-        }
+        fillallWords();
         allwords.sort(Collections.reverseOrder(String.CASE_INSENSITIVE_ORDER));
         for (String word : allwords) {
             taOutput.appendText(word);
@@ -109,13 +103,7 @@ public class WoordenController implements Initializable {
 
     @FXML
     private void frequentieAction(ActionEvent event) {
-        String[] splitted = DEFAULT_TEXT.split(" |\n|,", 0);
-        allwords = new ArrayList<String>();
-        for (String word : splitted) {
-            if (!word.equals("")) {
-                allwords.add(word);
-            }
-        }
+        fillallWords();
         for(String word : allwords){
             if(hmap.containsKey(word)){
                 hmap.put(word, hmap.get(word) + 1);
@@ -134,6 +122,16 @@ public class WoordenController implements Initializable {
     @FXML
     private void concordatieAction(ActionEvent event) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    private void fillallWords(){
+        String[] splitted = DEFAULT_TEXT.split(" |\n|,", 0);
+        allwords = new ArrayList<String>();
+        for (String word : splitted) {
+            if (!word.equals("")) {
+                allwords.add(word);
+            }
+        }
     }
 
 }
