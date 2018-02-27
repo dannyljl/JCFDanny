@@ -105,34 +105,52 @@ public class WoordenController implements Initializable {
     @FXML
     private void frequentieAction(ActionEvent event) {
         fillallWords();
-        Map<Integer,List<String>> newMap = new HashMap<Integer,List<String>>();
-        for(String word : allwords){
-            if(hmap.containsKey(word)){
+        Map<Integer, List<String>> newMap = new HashMap<Integer, List<String>>();
+        for (String word : allwords) {
+            if (hmap.containsKey(word)) {
                 hmap.put(word, hmap.get(word) + 1);
-            }
-            else{
-                hmap.put(word,1);
+            } else {
+                hmap.put(word, 1);
             }
         }
-        
-        for(Map.Entry<String,Integer> entry : hmap.entrySet()){
+
+        for (Map.Entry<String, Integer> entry : hmap.entrySet()) {
             newMap.computeIfAbsent(entry.getValue(), k -> new ArrayList<>()).add(entry.getKey());
         }
-        
-        Map<Integer,List<String>> sorted = new TreeMap<Integer,List<String>>(newMap).descendingMap();
-        
-        for(Map.Entry<Integer,List<String>> entry : sorted.entrySet()){
-         taOutput.appendText(entry.getKey() + "= " + entry.getValue() + "\n");   
+
+        Map<Integer, List<String>> sorted = new TreeMap<Integer, List<String>>(newMap).descendingMap();
+
+        for (Map.Entry<Integer, List<String>> entry : sorted.entrySet()) {
+            taOutput.appendText(entry.getKey() + "= " + entry.getValue() + "\n");
         }
-        
+
     }
 
     @FXML
     private void concordatieAction(ActionEvent event) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        String[] splitted = DEFAULT_TEXT.split(" |,", 0);
+        Map<String, List<Integer>> conMap = new HashMap<String, List<Integer>>();
+        int line = 1;
+        for (String word : splitted) {
+            if (!word.equals("")) {
+                if (word.contains("\n")) {
+                    line++;
+                    String[] newSplit = word.split("\n");
+                    conMap.computeIfAbsent(newSplit[0], k -> new ArrayList<>()).add(line - 1);
+                    if (!newSplit[1].equals("")) {
+                        conMap.computeIfAbsent(newSplit[1], k -> new ArrayList<>()).add(line);
+                    }
+                } else {
+                    conMap.computeIfAbsent(word, k -> new ArrayList<>()).add(line);
+                }
+            }
+        }
+        for (Map.Entry<String, List<Integer>> entry : conMap.entrySet()) {
+            taOutput.appendText(entry.getKey() + "= " + entry.getValue() + "\n");
+        }
     }
-    
-    private void fillallWords(){
+
+    private void fillallWords() {
         String[] splitted = DEFAULT_TEXT.split(" |\n|,", 0);
         allwords = new ArrayList<String>();
         for (String word : splitted) {
