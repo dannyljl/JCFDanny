@@ -127,15 +127,8 @@ public class WoordenController implements Initializable {
         
         hmap.entrySet().stream()
         .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-        .forEach(System.out::println);
+        .forEach(x -> taOutput.appendText(x.getKey() + "=  " + x.getValue() + "\n" ));
         
-//        for(Map.Entry<String, Integer> entry : hmap.entrySet()){
-//           entry.getKey();
-//           entry.getValue();
-//           taOutput.appendText("woord:" + entry.getKey());
-//           taOutput.appendText(" " + entry.getValue());
-//           taOutput.appendText("\n");
-//        }
     }
 
     @FXML
