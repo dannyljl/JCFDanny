@@ -119,7 +119,7 @@ public class WoordenController implements Initializable {
             newMap.computeIfAbsent(entry.getValue(), k -> new ArrayList<>()).add(entry.getKey());
         }
         
-        Map<Integer,List<String>> sorted = new TreeMap<Integer,List<String>>(newMap);
+        Map<Integer,List<String>> sorted = new TreeMap<Integer,List<String>>(newMap).descendingMap();
         
         for(Map.Entry<Integer,List<String>> entry : sorted.entrySet()){
          taOutput.appendText(entry.getKey() + "= " + entry.getValue() + "\n");   
