@@ -49,6 +49,8 @@ public class WoordenController implements Initializable {
             + "Zetten we 't in de glazenkas\n"
             + "Een, twee, drie, vier\n"
             + "Hoedje van papier";
+    
+    private WoordenBrein brein = new WoordenBrein(DEFAULT_TEXT);
 
     @FXML
     private Button btAantal;
@@ -63,9 +65,6 @@ public class WoordenController implements Initializable {
     @FXML
     private TextArea taOutput;
 
-    private ArrayList<String> allwords = new ArrayList<String>();
-
-    private Map<String, Integer> hmap = new HashMap<String, Integer>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -74,29 +73,14 @@ public class WoordenController implements Initializable {
 
     @FXML
     private void aantalAction(ActionEvent event) {
-        String[] splitted = DEFAULT_TEXT.split(" |\n|,", 0);
-        allwords = new ArrayList<String>();
-        ArrayList<String> usedWords = new ArrayList<String>();
-        for (String word : splitted) {
-            if (!word.equals("")) {
-                allwords.add(word);
-                if (!usedWords.contains(word)) {
-                    usedWords.add(word);
-                }
-            }
-        }
-
-        //https://stackoverflow.com/questions/14602062/java-string-split-removed-empty-values
-        //https://stackoverflow.com/questions/17103275/how-to-settext-in-a-textarea-from-an-arraylist
-        taOutput.appendText("allwords : " + allwords.size());
-        taOutput.appendText("newWords :" + usedWords.size());
+        brein.aantalButton();
+        taOutput.appendText("allwords : " + brein.getAllSize());
+        taOutput.appendText("newWords :" + brein.getUsedSize());
     }
 
     @FXML
     private void sorteerAction(ActionEvent event) {
-        fillallWords();
-        allwords.sort(Collections.reverseOrder(String.CASE_INSENSITIVE_ORDER));
-        for (String word : allwords) {
+        for (String word : brein.sorteerButton()) {
             taOutput.appendText(word);
             taOutput.appendText("\n");
         }
@@ -104,60 +88,18 @@ public class WoordenController implements Initializable {
 
     @FXML
     private void frequentieAction(ActionEvent event) {
-        fillallWords();
-        Map<Integer, List<String>> newMap = new HashMap<Integer, List<String>>();
-        for (String word : allwords) {
-            if (hmap.containsKey(word)) {
-                hmap.put(word, hmap.get(word) + 1);
-            } else {
-                hmap.put(word, 1);
-            }
-        }
-
-        for (Map.Entry<String, Integer> entry : hmap.entrySet()) {
-            newMap.computeIfAbsent(entry.getValue(), k -> new ArrayList<>()).add(entry.getKey());
-        }
-
-        Map<Integer, List<String>> sorted = new TreeMap<Integer, List<String>>(newMap).descendingMap();
-
-        for (Map.Entry<Integer, List<String>> entry : sorted.entrySet()) {
+        for (Map.Entry<Integer, List<String>> entry : brein.frequentieButton().entrySet()) {
             taOutput.appendText(entry.getKey() + "= " + entry.getValue() + "\n");
         }
-
+        
     }
 
     @FXML
     private void concordatieAction(ActionEvent event) {
-        String[] splitted = DEFAULT_TEXT.split(" |,", 0);
-        Map<String, List<Integer>> conMap = new HashMap<String, List<Integer>>();
-        int line = 1;
-        for (String word : splitted) {
-            if (!word.equals("")) {
-                if (word.contains("\n")) {
-                    line++;
-                    String[] newSplit = word.split("\n");
-                    conMap.computeIfAbsent(newSplit[0], k -> new ArrayList<>()).add(line - 1);
-                    if (!newSplit[1].equals("")) {
-                        conMap.computeIfAbsent(newSplit[1], k -> new ArrayList<>()).add(line);
-                    }
-                } else {
-                    conMap.computeIfAbsent(word, k -> new ArrayList<>()).add(line);
-                }
-            }
-        }
-        for (Map.Entry<String, List<Integer>> entry : conMap.entrySet()) {
+        for (Map.Entry<String, List<Integer>> entry : brein.concordatieButton().entrySet()) {
             taOutput.appendText(entry.getKey() + "= " + entry.getValue() + "\n");
         }
     }
 
-    private void fillallWords() {
-        String[] splitted = DEFAULT_TEXT.split(" |\n|,", 0);
-        allwords = new ArrayList<String>();
-        for (String word : splitted) {
-            if (!word.equals("")) {
-                allwords.add(word);
-            }
-        }
-    }
 
 }
