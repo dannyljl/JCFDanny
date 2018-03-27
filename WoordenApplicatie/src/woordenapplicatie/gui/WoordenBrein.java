@@ -8,9 +8,11 @@ package woordenapplicatie.gui;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import javafx.event.ActionEvent;
 
 /**
@@ -19,9 +21,9 @@ import javafx.event.ActionEvent;
  */
 public class WoordenBrein {
 
-    private ArrayList<String> allwords = new ArrayList<String>();
+    private LinkedList<String> allwords = new LinkedList<String>();
     
-    private ArrayList<String> usedWords = new ArrayList<String>();
+    private TreeSet<String> usedWords = new TreeSet<String>();
 
     private Map<String, Integer> hmap = new HashMap<String, Integer>();
 
@@ -34,28 +36,15 @@ public class WoordenBrein {
     }
 
     public void aantalButton() {
-        String[] splitted = text.split(" |\n|,", 0);
-        allwords = new ArrayList<String>();
-        for (String word : splitted) {
-            if (!word.equals("")) {
-                allwords.add(word);
-                if (!usedWords.contains(word)) {
-                    usedWords.add(word);
-                }
-            }
-        }
-        //https://stackoverflow.com/questions/14602062/java-string-split-removed-empty-values
-        //https://stackoverflow.com/questions/17103275/how-to-settext-in-a-textarea-from-an-arraylist
+        
     }
 
-    public List<String> sorteerButton() {
-        fillallWords();
-        allwords.sort(Collections.reverseOrder(String.CASE_INSENSITIVE_ORDER));
-        return allwords;
+    public TreeSet<String> sorteerButton() {
+        // collectie aanmaken die meteen sorteerd kijk bij les 1 modules
+        return usedWords;
     }
 
     public Map<Integer,List<String>> frequentieButton() {
-        fillallWords();
         hmap = new HashMap<String, Integer>();
         Map<Integer, List<String>> newMap = new HashMap<Integer, List<String>>();
         for (String word : allwords) {
@@ -100,12 +89,16 @@ public class WoordenBrein {
 
     private void fillallWords() {
         String[] splitted = text.split(" |\n|,", 0);
-        allwords = new ArrayList<String>();
+        allwords = new LinkedList<String>();
         for (String word : splitted) {
             if (!word.equals("")) {
                 allwords.add(word);
+                usedWords.add(word);
+                // vervangen met collectie die deen duplicates heeft.
             }
         }
+        //https://stackoverflow.com/questions/14602062/java-string-split-removed-empty-values
+        //https://stackoverflow.com/questions/17103275/how-to-settext-in-a-textarea-from-an-arraylist
     }
     
     public int getAllSize(){
